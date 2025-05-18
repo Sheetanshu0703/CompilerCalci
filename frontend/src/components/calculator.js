@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { evaluateExpression } from "../services/api";
+import "./calculator.css";
+import BackgroundImage from "../assets/calciRobo.png"; // Adjust the path as needed
 
 const Calculator = () => {
   const [input, setInput] = useState("");
@@ -12,26 +14,27 @@ const Calculator = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-2xl mb-4">Simple Calculator</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="calculator-container">
+      <img src={BackgroundImage} alt="Calculator Bot" className="calculator-background" />
+      
+      <h1>Simple Calculator</h1>
+      
+      <form onSubmit={handleSubmit} className="calculator-form">
         <input
           type="text"
           placeholder="Enter expression"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="p-2 border border-gray-300 rounded"
+          className="calculator-input"
         />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="calc-button">
           Evaluate
         </button>
       </form>
+      
       {result && (
-        <div className="mt-4 text-lg">
-          Result: <span className="font-bold">{result}</span>
+        <div className="result">
+          Result: <span>{result}</span>
         </div>
       )}
     </div>
