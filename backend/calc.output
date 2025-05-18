@@ -1,0 +1,212 @@
+Grammar
+
+    0 $accept: input $end
+
+    1 input: expr '\n'
+
+    2 expr: expr PLUS expr
+    3     | expr MINUS expr
+    4     | expr TIMES expr
+    5     | expr DIVIDE expr
+    6     | LPAREN expr RPAREN
+    7     | NUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'\n' (10) 1
+error (256)
+NUMBER (258) 7
+PLUS (259) 2
+MINUS (260) 3
+TIMES (261) 4
+DIVIDE (262) 5
+LPAREN (263) 6
+RPAREN (264) 6
+
+
+Nonterminals, with rules where they appear
+
+$accept (11)
+    on left: 0
+input (12)
+    on left: 1, on right: 0
+expr (13)
+    on left: 2 3 4 5 6 7, on right: 1 2 3 4 5 6
+
+
+state 0
+
+    0 $accept: . input $end
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    input  go to state 3
+    expr   go to state 4
+
+
+state 1
+
+    7 expr: NUMBER .
+
+    $default  reduce using rule 7 (expr)
+
+
+state 2
+
+    6 expr: LPAREN . expr RPAREN
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    expr  go to state 5
+
+
+state 3
+
+    0 $accept: input . $end
+
+    $end  shift, and go to state 6
+
+
+state 4
+
+    1 input: expr . '\n'
+    2 expr: expr . PLUS expr
+    3     | expr . MINUS expr
+    4     | expr . TIMES expr
+    5     | expr . DIVIDE expr
+
+    PLUS    shift, and go to state 7
+    MINUS   shift, and go to state 8
+    TIMES   shift, and go to state 9
+    DIVIDE  shift, and go to state 10
+    '\n'    shift, and go to state 11
+
+
+state 5
+
+    2 expr: expr . PLUS expr
+    3     | expr . MINUS expr
+    4     | expr . TIMES expr
+    5     | expr . DIVIDE expr
+    6     | LPAREN expr . RPAREN
+
+    PLUS    shift, and go to state 7
+    MINUS   shift, and go to state 8
+    TIMES   shift, and go to state 9
+    DIVIDE  shift, and go to state 10
+    RPAREN  shift, and go to state 12
+
+
+state 6
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+state 7
+
+    2 expr: expr PLUS . expr
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    expr  go to state 13
+
+
+state 8
+
+    3 expr: expr MINUS . expr
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    expr  go to state 14
+
+
+state 9
+
+    4 expr: expr TIMES . expr
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    expr  go to state 15
+
+
+state 10
+
+    5 expr: expr DIVIDE . expr
+
+    NUMBER  shift, and go to state 1
+    LPAREN  shift, and go to state 2
+
+    expr  go to state 16
+
+
+state 11
+
+    1 input: expr '\n' .
+
+    $default  reduce using rule 1 (input)
+
+
+state 12
+
+    6 expr: LPAREN expr RPAREN .
+
+    $default  reduce using rule 6 (expr)
+
+
+state 13
+
+    2 expr: expr . PLUS expr
+    2     | expr PLUS expr .
+    3     | expr . MINUS expr
+    4     | expr . TIMES expr
+    5     | expr . DIVIDE expr
+
+    TIMES   shift, and go to state 9
+    DIVIDE  shift, and go to state 10
+
+    $default  reduce using rule 2 (expr)
+
+
+state 14
+
+    2 expr: expr . PLUS expr
+    3     | expr . MINUS expr
+    3     | expr MINUS expr .
+    4     | expr . TIMES expr
+    5     | expr . DIVIDE expr
+
+    TIMES   shift, and go to state 9
+    DIVIDE  shift, and go to state 10
+
+    $default  reduce using rule 3 (expr)
+
+
+state 15
+
+    2 expr: expr . PLUS expr
+    3     | expr . MINUS expr
+    4     | expr . TIMES expr
+    4     | expr TIMES expr .
+    5     | expr . DIVIDE expr
+
+    $default  reduce using rule 4 (expr)
+
+
+state 16
+
+    2 expr: expr . PLUS expr
+    3     | expr . MINUS expr
+    4     | expr . TIMES expr
+    5     | expr . DIVIDE expr
+    5     | expr DIVIDE expr .
+
+    $default  reduce using rule 5 (expr)
