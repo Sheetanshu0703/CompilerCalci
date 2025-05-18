@@ -1,4 +1,3 @@
-%debug
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +15,7 @@ void yyerror(const char* s);
 
 %%
 input:
-    expr '\n' { printf("%d\n", $1); }
+    expr '\n' { printf("Result: %d\n", $1); }
 ;
 
 expr:
@@ -41,9 +40,11 @@ void yyerror(const char* s) {
 }
 
 int main() {
+    printf("Enter expression:\n");
     yyparse();
     return 0;
 }
-int yywrap(){
+
+int yywrap() {
     return 1;
 }

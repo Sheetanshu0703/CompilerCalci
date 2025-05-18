@@ -68,7 +68,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 189 of yacc.c  */
-#line 2 "calc.y"
+#line 1 "calc.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +82,7 @@ void yyerror(const char* s);
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 /* Enabling verbose error messages.  */
@@ -413,7 +413,7 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    19,    19,    23,    24,    25,    26,    33,    34
+       0,    18,    18,    22,    23,    24,    25,    32,    33
 };
 #endif
 
@@ -1317,35 +1317,35 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 19 "calc.y"
-    { printf("%d\n", (yyvsp[(1) - (2)])); ;}
+#line 18 "calc.y"
+    { printf("Result: %d\n", (yyvsp[(1) - (2)])); ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 23 "calc.y"
+#line 22 "calc.y"
     { (yyval) = (yyvsp[(1) - (3)]) + (yyvsp[(3) - (3)]); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 24 "calc.y"
+#line 23 "calc.y"
     { (yyval) = (yyvsp[(1) - (3)]) - (yyvsp[(3) - (3)]); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 25 "calc.y"
+#line 24 "calc.y"
     { (yyval) = (yyvsp[(1) - (3)]) * (yyvsp[(3) - (3)]); ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 26 "calc.y"
+#line 25 "calc.y"
     {
         if ((yyvsp[(3) - (3)]) == 0) {
             yyerror("Division by zero");
@@ -1358,14 +1358,14 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 33 "calc.y"
+#line 32 "calc.y"
     { (yyval) = (yyvsp[(2) - (3)]); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 34 "calc.y"
+#line 33 "calc.y"
     { (yyval) = (yyvsp[(1) - (1)]); ;}
     break;
 
@@ -1584,7 +1584,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 37 "calc.y"
+#line 36 "calc.y"
 
 
 void yyerror(const char* s) {
@@ -1592,10 +1592,12 @@ void yyerror(const char* s) {
 }
 
 int main() {
+    printf("Enter expression:\n");
     yyparse();
     return 0;
 }
-int yywrap(){
+
+int yywrap() {
     return 1;
 }
 

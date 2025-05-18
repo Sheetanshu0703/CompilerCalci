@@ -368,7 +368,8 @@ char *yytext;
 #define INITIAL 0
 #line 2 "calc.l"
 #include "calc.tab.h"
-#line 372 "lex.yy.c"
+#include <stdlib.h>
+#line 373 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -519,10 +520,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 5 "calc.l"
+#line 6 "calc.l"
 
 
-#line 526 "lex.yy.c"
+#line 527 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -607,60 +608,60 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 7 "calc.l"
+#line 8 "calc.l"
 { yylval = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 8 "calc.l"
-; // Ignore whitespace
+#line 9 "calc.l"
+;  // ignore whitespace
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 9 "calc.l"
+#line 10 "calc.l"
 { return '\n'; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 10 "calc.l"
+#line 11 "calc.l"
 { return PLUS; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 11 "calc.l"
+#line 12 "calc.l"
 { return MINUS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 12 "calc.l"
+#line 13 "calc.l"
 { return TIMES; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 13 "calc.l"
+#line 14 "calc.l"
 { return DIVIDE; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 14 "calc.l"
+#line 15 "calc.l"
 { return LPAREN; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 15 "calc.l"
+#line 16 "calc.l"
 { return RPAREN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 17 "calc.l"
+#line 18 "calc.l"
 { printf("Invalid character: %s\n", yytext); exit(1); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 19 "calc.l"
+#line 20 "calc.l"
 ECHO;
 	YY_BREAK
-#line 664 "lex.yy.c"
+#line 665 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1546,5 +1547,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 19 "calc.l"
+#line 20 "calc.l"
 
