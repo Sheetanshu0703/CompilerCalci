@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Path to the executable
-const executablePath = path.join(__dirname, "../backend/a.exe");
+const executablePath = path.join(__dirname, "../backend/calc.exe");
 
 app.post("/evaluate", (req, res) => {
   const { expression } = req.body;
@@ -41,11 +41,21 @@ app.post("/evaluate", (req, res) => {
       return res.status(500).json({ error: "Error evaluating expression", details: errorOutput.trim() });
     }
 
-    // Extract the part after "Result:" to return clean output
-    const match = output.match(/Result:\s*(.*)/);
-    const result = match ? match[1].trim() : output.trim();
+    // Try to parse the output as JSON
+    let responseJson;
+    try {
+      // Find the first { ... } JSON object in the output
+      const jsonMatch = output.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        responseJson = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error("No JSON found in output");
+      }
+    } catch (err) {
+      return res.status(500).json({ error: "Failed to parse backend output as JSON", details: output.trim() });
+    }
 
-    res.json({ result });
+    res.json(responseJson);
   });
 
   // Send expression to the executable's stdin and close input stream

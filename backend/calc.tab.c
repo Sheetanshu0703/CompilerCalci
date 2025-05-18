@@ -68,17 +68,21 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 189 of yacc.c  */
-#line 1 "calc.y"
+#line 4 "calc.y"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "parse_tree.h"
 
 int yylex(void);
 void yyerror(const char* s);
 
+extern ParseNode* current_tree;
+
 
 /* Line 189 of yacc.c  */
-#line 82 "calc.tab.c"
+#line 86 "calc.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -98,6 +102,17 @@ void yyerror(const char* s);
 # define YYTOKEN_TABLE 0
 #endif
 
+/* "%code requires" blocks.  */
+
+/* Line 209 of yacc.c  */
+#line 1 "calc.y"
+
+#include "parse_tree.h"
+
+
+
+/* Line 209 of yacc.c  */
+#line 116 "calc.tab.c"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -118,7 +133,20 @@ void yyerror(const char* s);
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 214 of yacc.c  */
+#line 16 "calc.y"
+
+    int num;
+    ParseNode* node;
+
+
+
+/* Line 214 of yacc.c  */
+#line 149 "calc.tab.c"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -129,7 +157,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 133 "calc.tab.c"
+#line 161 "calc.tab.c"
 
 #ifdef short
 # undef short
@@ -413,7 +441,7 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    18,    18,    22,    23,    24,    25,    32,    33
+       0,    32,    32,    46,    56,    66,    76,    89,    90
 };
 #endif
 
@@ -1317,62 +1345,109 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 18 "calc.y"
-    { printf("Result: %d\n", (yyvsp[(1) - (2)])); ;}
+#line 32 "calc.y"
+    {
+        if ((yyvsp[(1) - (2)].node) == NULL) {
+            printf("{\"error\":\"Invalid expression\"}\n");
+        } else {
+            char* json = tree_to_json((yyvsp[(1) - (2)].node));
+            int result = eval_tree((yyvsp[(1) - (2)].node));
+            printf("{\"result\":%d,\"parseTree\":%s}\n", result, json);
+            free(json);
+            free_tree((yyvsp[(1) - (2)].node));
+        }
+    ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 22 "calc.y"
-    { (yyval) = (yyvsp[(1) - (3)]) + (yyvsp[(3) - (3)]); ;}
+#line 46 "calc.y"
+    {
+        if ((yyvsp[(1) - (3)].node) == NULL || (yyvsp[(3) - (3)].node) == NULL) {
+            (yyval.node) = NULL;
+        } else {
+            ParseNode* node = create_node("+", "operator");
+            add_child(node, (yyvsp[(1) - (3)].node));
+            add_child(node, (yyvsp[(3) - (3)].node));
+            (yyval.node) = node;
+        }
+    ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 23 "calc.y"
-    { (yyval) = (yyvsp[(1) - (3)]) - (yyvsp[(3) - (3)]); ;}
+#line 56 "calc.y"
+    {
+        if ((yyvsp[(1) - (3)].node) == NULL || (yyvsp[(3) - (3)].node) == NULL) {
+            (yyval.node) = NULL;
+        } else {
+            ParseNode* node = create_node("-", "operator");
+            add_child(node, (yyvsp[(1) - (3)].node));
+            add_child(node, (yyvsp[(3) - (3)].node));
+            (yyval.node) = node;
+        }
+    ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 24 "calc.y"
-    { (yyval) = (yyvsp[(1) - (3)]) * (yyvsp[(3) - (3)]); ;}
+#line 66 "calc.y"
+    {
+        if ((yyvsp[(1) - (3)].node) == NULL || (yyvsp[(3) - (3)].node) == NULL) {
+            (yyval.node) = NULL;
+        } else {
+            ParseNode* node = create_node("*", "operator");
+            add_child(node, (yyvsp[(1) - (3)].node));
+            add_child(node, (yyvsp[(3) - (3)].node));
+            (yyval.node) = node;
+        }
+    ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 25 "calc.y"
+#line 76 "calc.y"
     {
-        if ((yyvsp[(3) - (3)]) == 0) {
+        if ((yyvsp[(1) - (3)].node) == NULL || (yyvsp[(3) - (3)].node) == NULL) {
+            (yyval.node) = NULL;
+        } else if ((yyvsp[(3) - (3)].node)->value && atoi((yyvsp[(3) - (3)].node)->value) == 0) {
             yyerror("Division by zero");
-            exit(1);
+            (yyval.node) = NULL;
+        } else {
+            ParseNode* node = create_node("/", "operator");
+            add_child(node, (yyvsp[(1) - (3)].node));
+            add_child(node, (yyvsp[(3) - (3)].node));
+            (yyval.node) = node;
         }
-        (yyval) = (yyvsp[(1) - (3)]) / (yyvsp[(3) - (3)]);
     ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 32 "calc.y"
-    { (yyval) = (yyvsp[(2) - (3)]); ;}
+#line 89 "calc.y"
+    { (yyval.node) = (yyvsp[(2) - (3)].node); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 33 "calc.y"
-    { (yyval) = (yyvsp[(1) - (1)]); ;}
+#line 90 "calc.y"
+    {
+        char num_str[32];
+        sprintf(num_str, "%d", (yyvsp[(1) - (1)].num));
+        (yyval.node) = create_node(num_str, "number");
+    ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1376 "calc.tab.c"
+#line 1451 "calc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1584,7 +1659,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 36 "calc.y"
+#line 97 "calc.y"
 
 
 void yyerror(const char* s) {
@@ -1592,12 +1667,7 @@ void yyerror(const char* s) {
 }
 
 int main() {
-    printf("Enter expression:\n");
     yyparse();
     return 0;
-}
-
-int yywrap() {
-    return 1;
 }
 

@@ -261,6 +261,9 @@ static void yy_flex_free YY_PROTO(( void * ));
 
 #define YY_AT_BOL() (yy_current_buffer->yy_at_bol)
 
+
+#define yywrap() 1
+#define YY_SKIP_YYWRAP
 typedef unsigned char YY_CHAR;
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 typedef int yy_state_type;
@@ -286,8 +289,8 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 #define YY_END_OF_BUFFER 12
 static yyconst short int yy_accept[16] =
     {   0,
-        0,    0,   12,   10,    2,    3,    8,    9,    6,    4,
-        5,    7,    1,    1,    0
+        0,    0,   12,   10,    8,    9,    6,    7,    4,    2,
+        3,    5,    1,    1,    0
     } ;
 
 static yyconst int yy_ec[256] =
@@ -366,10 +369,11 @@ static char *yy_last_accepting_cpos;
 char *yytext;
 #line 1 "calc.l"
 #define INITIAL 0
-#line 2 "calc.l"
+#line 3 "calc.l"
+#include <stdio.h>
 #include "calc.tab.h"
-#include <stdlib.h>
-#line 373 "lex.yy.c"
+#include "parse_tree.h"
+#line 377 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -520,10 +524,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 6 "calc.l"
+#line 8 "calc.l"
 
 
-#line 527 "lex.yy.c"
+#line 531 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -608,60 +612,60 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 8 "calc.l"
-{ yylval = atoi(yytext); return NUMBER; }
+#line 10 "calc.l"
+{ yylval.num = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 2:
-YY_RULE_SETUP
-#line 9 "calc.l"
-;  // ignore whitespace
-	YY_BREAK
-case 3:
-YY_RULE_SETUP
-#line 10 "calc.l"
-{ return '\n'; }
-	YY_BREAK
-case 4:
 YY_RULE_SETUP
 #line 11 "calc.l"
 { return PLUS; }
 	YY_BREAK
-case 5:
+case 3:
 YY_RULE_SETUP
 #line 12 "calc.l"
 { return MINUS; }
 	YY_BREAK
-case 6:
+case 4:
 YY_RULE_SETUP
 #line 13 "calc.l"
 { return TIMES; }
 	YY_BREAK
-case 7:
+case 5:
 YY_RULE_SETUP
 #line 14 "calc.l"
 { return DIVIDE; }
 	YY_BREAK
-case 8:
+case 6:
 YY_RULE_SETUP
 #line 15 "calc.l"
 { return LPAREN; }
 	YY_BREAK
-case 9:
+case 7:
 YY_RULE_SETUP
 #line 16 "calc.l"
 { return RPAREN; }
 	YY_BREAK
-case 10:
+case 8:
+YY_RULE_SETUP
+#line 17 "calc.l"
+;  // ignore whitespace
+	YY_BREAK
+case 9:
 YY_RULE_SETUP
 #line 18 "calc.l"
-{ printf("Invalid character: %s\n", yytext); exit(1); }
+{ return '\n'; }
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 19 "calc.l"
+{ printf("Unexpected character: %s\n", yytext); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 20 "calc.l"
+#line 21 "calc.l"
 ECHO;
 	YY_BREAK
-#line 665 "lex.yy.c"
+#line 669 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1547,5 +1551,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 20 "calc.l"
+#line 21 "calc.l"
 

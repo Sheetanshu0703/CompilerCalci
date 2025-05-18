@@ -1,20 +1,21 @@
+%option noyywrap
 %{
+#include <stdio.h>
 #include "calc.tab.h"
-#include <stdlib.h>
+#include "parse_tree.h"
 %}
 
 %%
 
-[0-9]+              { yylval = atoi(yytext); return NUMBER; }
-[ \t]               ;  // ignore whitespace
-\n                  { return '\n'; }
+[0-9]+              { yylval.num = atoi(yytext); return NUMBER; }
 "+"                 { return PLUS; }
 "-"                 { return MINUS; }
 "*"                 { return TIMES; }
 "/"                 { return DIVIDE; }
 "("                 { return LPAREN; }
 ")"                 { return RPAREN; }
-
-.                   { printf("Invalid character: %s\n", yytext); exit(1); }
+[ \t]               ;  // ignore whitespace
+\n                  { return '\n'; }
+.                   { printf("Unexpected character: %s\n", yytext); }
 
 %%
