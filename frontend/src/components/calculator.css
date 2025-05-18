@@ -574,18 +574,46 @@ body, html, #root {
   align-items: center;
   justify-content: flex-start;
 }
-.main-heading {
-  position: relative;
+.heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
   z-index: 2;
-  text-align: center;
-  font-size: 3rem;
+}
+.bot-heading-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px #00ffd1cc);
+  background: transparent;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+.heading-text-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.main-heading {
+  margin: 0;
+  font-size: 2.7rem;
   font-weight: 900;
-  margin: 2rem 0 2.5rem 0;
   background: linear-gradient(45deg, #00ffd1, #00fff7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -1px;
   text-shadow: 0 0 30px #00ffd1aa, 0 0 10px #00fff7aa;
+}
+.main-description {
+  margin-top: 0.3rem;
+  font-size: 1.1rem;
+  color: #00ffd1;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px #00ffd1aa;
 }
 .background-bot-image {
   position: fixed;

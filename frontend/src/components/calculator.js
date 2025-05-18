@@ -105,8 +105,13 @@ const Calculator = () => {
 
   return (
     <div className="page-background">
-      <img src={BackgroundImage} alt="Calci Robo" className="background-bot-image" />
-      <h1 className="main-heading">Compiler Calci</h1>
+      <div className="heading-row">
+        <img src={BackgroundImage} alt="Calci Robo" className="bot-heading-image" />
+        <div className="heading-text-block">
+          <h1 className="main-heading">Compiler Calci</h1>
+          <div className="main-description">Your personal compiler calculator.</div>
+        </div>
+      </div>
       <div className="split-layout">
         <div className="left-pane">
           <div className="calculator-container">
