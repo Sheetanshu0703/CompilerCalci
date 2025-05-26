@@ -5,9 +5,7 @@ body, html, #root {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #e0e0e0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow-x: hidden;
 }
 
 .calculator-container {
@@ -398,6 +396,7 @@ body, html, #root {
   background: none;
   gap: 5rem;
   z-index: 2;
+  position: relative;
 }
 .left-pane {
   flex: 1 1 0;
@@ -433,7 +432,7 @@ body, html, #root {
   flex-direction: column;
   align-items: flex-start;
   transition: box-shadow 0.3s;
-  overflow-x: auto;
+  overflow: visible;
 }
 .parse-tree-vertical-container:hover {
   box-shadow: 0 8px 40px 0 #00ffd1cc, 0 0 0 2px #00ffd1;
@@ -544,6 +543,7 @@ body, html, #root {
     gap: 2rem;
     width: 98vw;
     min-width: 0;
+    overflow-x: hidden;
   }
   .left-pane, .right-pane {
     width: 100%;
@@ -559,6 +559,10 @@ body, html, #root {
     margin-top: 0;
     min-height: 300px;
     padding: 1.5rem 0.5rem;
+    overflow-x: auto;
+  }
+  .parse-tree-binary {
+    overflow-x: auto;
   }
 }
 
@@ -566,13 +570,13 @@ body, html, #root {
 .page-background {
   position: relative;
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
   overflow-x: hidden;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  padding-bottom: 2rem;
 }
 .heading-row {
   display: flex;
@@ -736,16 +740,16 @@ body, html, #root {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 400px;
   width: 100%;
-  overflow-x: auto;
   position: relative;
   gap: 2rem;
+  overflow: visible;
 }
 .tree-binary-scroll {
-  max-width: 100%;
+  width: 100%;
   overflow-x: auto;
   padding-bottom: 1rem;
+  position: relative;
 }
 .tree-binary-node-wrapper {
   display: flex;
@@ -812,4 +816,262 @@ body, html, #root {
   height: 100%;
   pointer-events: none;
   z-index: 1;
+}
+
+/* Token Table Styles */
+.token-table-container {
+  background: rgba(21, 21, 38, 0.8);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 255, 209, 0.2);
+}
+
+.token-table-container h3 {
+  color: #00ffd1;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.token-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.token-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.token-table th,
+.token-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 255, 209, 0.1);
+}
+
+.token-table th {
+  color: #00ffd1;
+  font-weight: 600;
+  background: rgba(0, 255, 209, 0.05);
+}
+
+.token-table td {
+  color: #e0e0e0;
+}
+
+.token-table tr:last-child td {
+  border-bottom: none;
+}
+
+.token-table tr:hover td {
+  background: rgba(0, 255, 209, 0.05);
+}
+
+/* Token Table Bottom Styles */
+.token-table-container-bottom {
+  width: 98vw;
+  max-width: 1800px;
+  margin: 2rem auto;
+  background: rgba(21, 21, 38, 0.95);
+  border-radius: 24px;
+  padding: 1.5rem;
+  border: 2px solid #00ffd1;
+  box-shadow: 0 8px 32px 0 rgba(0,255,255,0.12), 0 0 0 2px #00ffd1;
+  overflow-x: auto;
+  position: relative; /* Needed for the partition line */
+}
+
+.token-table-container-bottom::before {
+  content: '';
+  position: absolute;
+  top: -2rem; /* Adjust to position the line above the container */
+  left: 0;
+  width: 100%;
+  height: 2px; /* Thickness of the line */
+  background: linear-gradient(to right, transparent, rgba(0, 255, 209, 0.5), transparent); /* Gradient line */
+}
+
+.token-table-container-bottom h3 {
+  color: #00ffd1;
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.token-table-container-bottom .token-table table {
+  /* Inherits table styles from .token-table */
+}
+
+.token-table-container-bottom .token-table th,
+.token-table-container-bottom .token-table td {
+    /* Inherits table header/cell styles from .token-table */
+}
+
+/* Parse Tree Visualization Styles */
+.parse-tree-info {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.parse-tree-info p {
+  margin: 0 0 10px 0;
+  color: #e0e0e0;
+}
+
+.parse-tree-info ol {
+  margin: 0;
+  padding-left: 20px;
+  color: #e0e0e0;
+}
+
+.parse-tree-info li {
+  margin: 5px 0;
+}
+
+.calculation-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 0.8em;
+}
+
+.step-number {
+  background-color: #4a90e2;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.step-description {
+  color: #4a90e2;
+  font-style: italic;
+}
+
+.calculation-arrow {
+  position: relative;
+  height: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow-line {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background-color: #4a90e2;
+}
+
+.arrow-head {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #4a90e2;
+}
+
+.compiler-steps {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.compiler-steps h3 {
+  color: #4a90e2;
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+}
+
+.compiler-steps ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #e0e0e0;
+}
+
+.compiler-steps li {
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+.parse-tree-placeholder {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+.parse-tree-placeholder p {
+  margin: 5px 0;
+}
+
+.parse-tree-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Update existing tree styles */
+.tree-binary-node {
+  background-color: rgba(74, 144, 226, 0.1);
+  border: 1px solid #4a90e2;
+  transition: all 0.3s ease;
+}
+
+.tree-binary-node:hover {
+  background-color: rgba(74, 144, 226, 0.2);
+  transform: scale(1.05);
+}
+
+.tree-value {
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.tree-type {
+  color: #888;
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
+/* Add scroll to top button styles */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(45deg, #00ffd1, #00fff7);
+  color: #151526;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 255, 209, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 255, 209, 0.5);
+}
+
+/* Add smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
 }

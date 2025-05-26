@@ -38,11 +38,15 @@
 #line 1 "calc.y"
 
 #include "parse_tree.h"
+#include "lexer_defs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 
 /* Line 1676 of yacc.c  */
-#line 46 "calc.tab.h"
+#line 50 "calc.tab.h"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -67,7 +71,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 16 "calc.y"
+#line 84 "calc.y"
 
     int num;
     ParseNode* node;
@@ -75,7 +79,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 79 "calc.tab.h"
+#line 83 "calc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const { spawn } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = 5000;
@@ -12,6 +13,12 @@ app.use(bodyParser.json());
 
 // Path to the executable
 const executablePath = path.join(__dirname, "../backend/calc.exe");
+
+// Check if executable exists
+if (!fs.existsSync(executablePath)) {
+  console.error(`Error: Executable not found at ${executablePath}`);
+  process.exit(1);
+}
 
 app.post("/evaluate", (req, res) => {
   const { expression } = req.body;
@@ -35,6 +42,11 @@ app.post("/evaluate", (req, res) => {
     errorOutput += data.toString();
   });
 
+  child.on("error", (error) => {
+    console.error(`Failed to start process: ${error.message}`);
+    return res.status(500).json({ error: "Failed to start evaluation process" });
+  });
+
   child.on("close", (code) => {
     if (code !== 0) {
       console.error(`Process exited with code ${code}, stderr: ${errorOutput}`);
@@ -52,6 +64,8 @@ app.post("/evaluate", (req, res) => {
         throw new Error("No JSON found in output");
       }
     } catch (err) {
+      console.error(`Failed to parse output: ${err.message}`);
+      console.error(`Raw output: ${output}`);
       return res.status(500).json({ error: "Failed to parse backend output as JSON", details: output.trim() });
     }
 

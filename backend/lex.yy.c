@@ -371,9 +371,33 @@ char *yytext;
 #define INITIAL 0
 #line 3 "calc.l"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "calc.tab.h"
 #include "parse_tree.h"
-#line 377 "lex.yy.c"
+#include "lexer_defs.h"
+
+// Define the variables declared in lexer_defs.h
+Token* token_list = NULL;
+int token_count = 0;
+
+void add_token(const char* value, const char* type) {
+    token_count++;
+    token_list = realloc(token_list, token_count * sizeof(Token));
+    token_list[token_count - 1].value = strdup(value);
+    token_list[token_count - 1].type = strdup(type);
+}
+
+void free_tokens() {
+    for (int i = 0; i < token_count; i++) {
+        free(token_list[i].value);
+        free(token_list[i].type);
+    }
+    free(token_list);
+    token_list = NULL;
+    token_count = 0;
+}
+#line 401 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -524,10 +548,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 8 "calc.l"
+#line 32 "calc.l"
 
 
-#line 531 "lex.yy.c"
+#line 555 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -612,60 +636,60 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "calc.l"
-{ yylval.num = atoi(yytext); return NUMBER; }
+#line 34 "calc.l"
+{ yylval.num = atoi(yytext); add_token(yytext, "Constants"); return NUMBER; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "calc.l"
-{ return PLUS; }
+#line 35 "calc.l"
+{ add_token("+", "Operators"); return PLUS; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "calc.l"
-{ return MINUS; }
+#line 36 "calc.l"
+{ add_token("-", "Operators"); return MINUS; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 13 "calc.l"
-{ return TIMES; }
+#line 37 "calc.l"
+{ add_token("*", "Operators"); return TIMES; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "calc.l"
-{ return DIVIDE; }
+#line 38 "calc.l"
+{ add_token("/", "Operators"); return DIVIDE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 15 "calc.l"
-{ return LPAREN; }
+#line 39 "calc.l"
+{ add_token("(", "Punctuators"); return LPAREN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 16 "calc.l"
-{ return RPAREN; }
+#line 40 "calc.l"
+{ add_token(")", "Punctuators"); return RPAREN; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 17 "calc.l"
+#line 41 "calc.l"
 ;  // ignore whitespace
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 18 "calc.l"
+#line 42 "calc.l"
 { return '\n'; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 19 "calc.l"
+#line 43 "calc.l"
 { printf("Unexpected character: %s\n", yytext); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "calc.l"
+#line 45 "calc.l"
 ECHO;
 	YY_BREAK
-#line 669 "lex.yy.c"
+#line 693 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1551,5 +1575,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 21 "calc.l"
+#line 45 "calc.l"
 

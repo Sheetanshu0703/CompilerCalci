@@ -3,15 +3,35 @@ import { evaluateExpression } from "../services/api";
 import "./calculator.css";
 import BackgroundImage from "../assets/calciRobo.png";
 
-// Binary tree layout without arrows
-export const TreeNode = ({ node }) => {
+// Binary tree layout with arrows and calculation order
+export const TreeNode = ({ node, stepNumber = 1, totalSteps = 1 }) => {
   if (!node) return null;
+
+  const getOperationDescription = (operator) => {
+    switch (operator) {
+      case '+': return 'Addition';
+      case '-': return 'Subtraction';
+      case '*': return 'Multiplication';
+      case '/': return 'Division';
+      default: return '';
+    }
+  };
+
+  const isOperator = node.type === 'operator';
+  const operationDesc = isOperator ? getOperationDescription(node.value) : '';
+
   return (
     <div className="tree-binary-node-wrapper">
       <div className="tree-binary-node">
         <div className="tree-content-binary">
           <span className="tree-value">{node.value}</span>
           {node.type && <span className="tree-type">{node.type}</span>}
+          {isOperator && (
+            <div className="calculation-step">
+              <span className="step-number">Step {stepNumber}</span>
+              <span className="step-description">{operationDesc}</span>
+            </div>
+          )}
         </div>
       </div>
       {node.children && node.children.length > 0 && (
@@ -19,7 +39,15 @@ export const TreeNode = ({ node }) => {
           <div className="tree-binary-children">
             {node.children.map((child, idx) => (
               <div className="tree-binary-child" key={idx}>
-                <TreeNode node={child} />
+                <div className="calculation-arrow">
+                  <div className="arrow-line"></div>
+                  <div className="arrow-head"></div>
+                </div>
+                <TreeNode 
+                  node={child} 
+                  stepNumber={isOperator ? stepNumber + 1 : stepNumber}
+                  totalSteps={totalSteps}
+                />
               </div>
             ))}
           </div>
@@ -42,12 +70,32 @@ const Calculator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState([]);
   const [parseTree, setParseTree] = useState(null);
+  const [tokens, setTokens] = useState([]);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Add scroll event listener
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   const handleButtonClick = (val) => {
     if (val === "C") {
       setInput("");
       setResult("");
       setParseTree(null);
+      setTokens([]);
       return;
     }
     if (val === "DEL") {
@@ -67,15 +115,29 @@ const Calculator = () => {
     setIsLoading(true);
     try {
       const response = await evaluateExpression(input);
-      const newResult = response.result || response.error;
-      setResult(newResult);
-      setHistory(prev => [...prev, { expression: input, result: newResult }]);
-      if (response.parseTree) {
-        setParseTree(response.parseTree);
+      if (response.error) {
+        setResult(`Error: ${response.error}`);
+        setParseTree(null);
+        setTokens([]);
+      } else {
+        const newResult = response.result;
+        setResult(newResult);
+        setHistory(prev => [...prev, { expression: input, result: newResult }]);
+        if (response.parseTree) {
+          setParseTree(response.parseTree);
+        } else {
+          setParseTree(null);
+        }
+        if (response.tokens) {
+          setTokens(response.tokens);
+        } else {
+          setTokens([]);
+        }
       }
     } catch (error) {
       setResult("Error: Could not evaluate expression");
       setParseTree(null);
+      setTokens([]);
     } finally {
       setIsLoading(false);
     }
@@ -183,13 +245,71 @@ const Calculator = () => {
         </div>
         <div className="right-pane">
           <div className="parse-tree-vertical-container">
-            <h2>Parse Tree</h2>
+            <h2>Parse Tree & Calculation Steps</h2>
+            <div className="parse-tree-info">
+              <p>This visualization shows how the compiler:</p>
+              <ol>
+                <li>Parses your expression into a tree structure</li>
+                <li>Determines the order of operations</li>
+                <li>Evaluates the expression step by step</li>
+              </ol>
+            </div>
             <div className="parse-tree-binary tree-binary-scroll">
-              {parseTree ? <TreeNode node={parseTree} /> : <div className="parse-tree-placeholder">No parse tree to display.</div>}
+              {parseTree ? (
+                <div className="parse-tree-visualization">
+                  <TreeNode node={parseTree} />
+                  <div className="compiler-steps">
+                    <h3>Compiler Design Concepts Demonstrated:</h3>
+                    <ul>
+                      <li>Lexical Analysis (Token Generation)</li>
+                      <li>Syntax Analysis (Parse Tree Construction)</li>
+                      <li>Semantic Analysis (Type Checking)</li>
+                      <li>Intermediate Code Generation</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <div className="parse-tree-placeholder">
+                  <p>Enter an expression to see the parse tree and calculation steps.</p>
+                  <p>Example: (2 + 3) * 4</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+      {tokens.length > 0 && (
+        <div className="token-table-container-bottom">
+          <h3>Token Table</h3>
+          <div className="token-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Token</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tokens.map((token, index) => (
+                  <tr key={index}>
+                    <td>{token.value}</td>
+                    <td>{token.type}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {showScrollTop && (
+        <button 
+          className="scroll-to-top"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 };
